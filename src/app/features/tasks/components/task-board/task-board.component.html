@@ -1,0 +1,73 @@
+<div class="board-container">
+  <div class="board-columns">
+    @for (state of states(); track state.id) {
+    <div class="board-column">
+      <div class="column-header">
+        <h3>{{ state.name }}</h3>
+        <div class="task-count-container">
+          <button (click)="onAddTask(state.id)">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="icon-plus"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M12 5l0 14" />
+              <path d="M5 12l14 0" />
+            </svg>
+          </button>
+
+          <span class="task-count">
+            {{ tasksByState().get(state.id)?.length || 0 }}
+          </span>
+        </div>
+      </div>
+
+      <div
+        class="task-list"
+        [id]="'state-' + state.id"
+        cdkDropList
+        [cdkDropListData]="tasksByState().get(state.id)"
+        [cdkDropListConnectedTo]="getConnectedLists(state.id)"
+        (cdkDropListDropped)="onDrop($event)"
+      >
+        @for (task of tasksByState().get(state.id); track task.id) {
+        <div class="task-card" cdkDrag>
+          <div class="task-content">
+            <p class="task-title">{{ task.title }}</p>
+            <div class="task-actions">
+              <button class="btn-icon" (click)="onEdit(task)">✏️</button>
+              <button class="btn-icon" (click)="onDelete(task.id)">🗑️</button>
+            </div>
+          </div>
+        </div>
+        } @if (tasksByState().get(state.id)?.length === 0) {
+        <div class="empty-state">No hay tareas en este estado</div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+  @if(showAddTaskDialog()){
+  <app-task-add-dialog
+    [stateId]="stateOfAddTask()"
+    [onSave]="saveAddTask"
+    [onClose]="closeAddTaskDialog"
+  />
+  }
+
+  @if(showEditTaskDialog()){
+  <app-task-edit-dialog
+    [task]="taskToEdit()!"
+    [onSave]="saveEditTask"
+    [onClose]="closeEditTaskDialog"
+  />
+  }
+
+</div>
