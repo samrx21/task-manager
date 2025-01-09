@@ -1,59 +1,69 @@
-# TaskManager
+# Gestor de Tareas con Estados Personalizables
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+## Descripción
 
-## Development server
+Esta aplicación es un gestor de tareas que permite a los usuarios crear, editar, eliminar y organizar tareas en diferentes estados. Los estados son personalizables y se pueden agregar o eliminar según las necesidades del usuario.
 
-To start a local development server, run:
+## Funcionalidades Principales
 
-```bash
-ng serve
-```
+- **Gestión de Tareas**: Crear, editar, eliminar y restaurar tareas.
+- **Estados Personalizables**: Agregar y eliminar estados de tareas.
+- **Vista Kanban**: Visualizar tareas en un tablero Kanban con columnas para cada estado.
+- **Vista de Tabla**: Visualizar tareas en una tabla con opciones para cambiar el estado desde un menú desplegable.
+- **Papelera**: Restaurar o eliminar permanentemente tareas desde la papelera.
+- **Alertas**: Notificaciones para acciones importantes como creación, edición y eliminación de tareas.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Decisiones Técnicas
 
-## Code scaffolding
+- **Angular**: Framework principal para la construcción de la aplicación.
+- **Componentes Reutilizables**: Uso de componentes reutilizables para tareas, estados y alertas.
+- **Servicios**: Implementación de servicios para la gestión de tareas y estados.
+- **SCSS**: Uso de SCSS para estilos modulares y variables globales.
+- **Señales y Computados**: Uso de señales y computados para la gestión reactiva del estado de la aplicación.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Cómo Usar la Aplicación
 
-```bash
-ng generate component component-name
-```
+### Requisitos Previos
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Node.js y npm instalados en tu máquina.
 
-```bash
-ng generate --help
-```
+### Instalación
 
-## Building
+1. Clona el repositorio:
+  ```bash
+  git clone https://github.com/samrx21/task-manager.git
+  cd gestor-tareas
+  npm install
+  ng serve
+  ```
 
-To build the project run:
+2. Abre tu navegador y navega a [http://localhost:4200](http://localhost:4200).
 
-```bash
-ng build
-```
+### Uso
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+#### Crear Tarea:
 
-## Running unit tests
+1. Haz clic en el botón "+" o (Agregar Tarea)" segun la vista en la que estes (tarjetas o Tabla).
+2. Completa el formulario y selecciona el estado inicial.
+3. Haz clic en "Guardar".
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+#### Editar Tarea:
 
-```bash
-ng test
-```
+1. En la vista Kanban, haz hover sobre la tarea y haz clic en el icono de lápiz en la tarjeta de tarea.
+2. En la vista de tabla, haz clic en el icono de lápiz en la fila de tarea.
+3. Edita el título y guarda los cambios.
 
-## Running end-to-end tests
+#### Eliminar Tarea:
 
-For end-to-end (e2e) testing, run:
+1. Haz clic en el icono de papelera en la tarjeta o fila de tarea.
+2. La tarea se moverá a la papelera.
 
-```bash
-ng e2e
-```
+#### Restaurar o Eliminar Permanentemente Tareas:
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+1. Haz clic en el icono de papelera en la parte superior derecha para abrir la papelera.
+2. Haz clic en el icono de restaurar o eliminar permanentemente junto a la tarea.
 
-## Additional Resources
+#### Gestionar Estados:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. Haz clic en el botón "Estados" en la parte superior.
+2. Agrega o elimina estados según sea necesario.
