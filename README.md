@@ -32,7 +32,7 @@ Esta aplicación es un gestor de tareas que permite a los usuarios crear, editar
 1. Clona el repositorio:
   ```bash
   git clone https://github.com/samrx21/task-manager.git
-  cd gestor-tareas
+  cd task-manager
   npm install
   ng serve
   ```
@@ -43,7 +43,7 @@ Esta aplicación es un gestor de tareas que permite a los usuarios crear, editar
 
 #### Crear Tarea:
 
-1. Haz clic en el botón "+" o (Agregar Tarea)" segun la vista en la que estes (tarjetas o Tabla).
+1. Haz clic en el botón "+" o "Agregar Tarea" segun la vista en la que estes (tarjetas o Tabla).
 2. Completa el formulario y selecciona el estado inicial.
 3. Haz clic en "Guardar".
 
