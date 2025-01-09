@@ -22,29 +22,21 @@ export class TaskService {
         id: '1',
         title: 'Tarea 1',
         stateId: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         id: '2',
         title: 'Tarea 2',
         stateId: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         id: '3',
         title: 'Tarea 3',
         stateId: 2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       {
         id: '4',
         title: 'Tarea 4',
         stateId: 3,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
     ]);
   }
@@ -72,8 +64,6 @@ export class TaskService {
       id: crypto.randomUUID(),
       title,
       stateId: state,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
     this.tasks.update((tasks) => [...tasks, newTask]);
   }
@@ -142,4 +132,39 @@ export class TaskService {
   getStates(): State[] {
     return this.states();
   }
+
+  //manejo de papelera
+  private trash = signal<Task[]>([]);
+  
+  getTasksInTrash(): Task[] {
+    return this.trash();
+  }
+
+  deleteTaskToTrash(taskId: string): void {
+    const task = this.tasks().find((task) => task.id === taskId);
+    if (task) {
+      this.trash.update((tasks) => [...tasks, task]);
+      this.deleteTask(taskId);
+    }
+  }
+
+  //restaurar tarea
+  restoreTask(taskId: string): void {
+    const task = this.trash().find((task) => task.id === taskId);
+    if (task) {
+      this.tasks.update((tasks) => [...tasks, task]);
+      this.trash.update((tasks) => tasks.filter((t) => t.id !== taskId));
+    }
+  }
+
+  //eliminar tarea de forma permanente
+  deleteTaskFromTrash(taskId: string): void {
+    this.trash.update((tasks) => tasks.filter((t) => t.id !== taskId));
+  }
+
+  //vaciar papelera
+  emptyTrash(): void {
+    this.trash.set([]);
+  }
+
 }

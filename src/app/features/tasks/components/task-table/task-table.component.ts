@@ -1,57 +1,50 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { TaskService } from '@/core/services/task.service';
+import { State, Task } from '@/core/models';
 import { AlertService } from '@/core/services/alert.service';
-import { Task } from '@/core/models';
 import { TaskAddDialogComponent } from '@/features/tasks/components/task-add-dialog/task-add-dialog.component';
 import { TaskEditDialogComponent } from '@/features/tasks/components/task-edit-dialog/task-edit-dialog.component';
-
+import { FormsModule } from '@angular/forms';
 @Component({
-  selector: 'app-task-board',
+  selector: 'app-task-table',
   standalone: true,
-  imports: [
-    CommonModule,
-    DragDropModule,
-    TaskAddDialogComponent,
-    TaskEditDialogComponent,
-  ],
-  templateUrl: './task-board.component.html',
-  styleUrl: './task-board.component.scss',
+  imports: [CommonModule,FormsModule, TaskAddDialogComponent, TaskEditDialogComponent],
+  templateUrl: './task-table.component.html',
+  styleUrl: './task-table.component.scss',
 })
-export class TaskBoardComponent {
+export class TaskTableComponent {
   private taskService = inject(TaskService);
   private alertService = inject(AlertService);
 
+  tasks = computed(() => this.taskService.getAllTasks());
   states = computed(() => this.taskService.getStates());
-  tasksByState = this.taskService.tasksByState;
-  title: any;
 
-  getConnectedLists(currentStateId: number): string[] {
-    // Obtener todos los estados
-    const states = this.states();
-    // Encontrar el índice del estado actual
-    const currentIndex = states.findIndex((s) => s.id === currentStateId);
-
-    // Si es el último estado, no puede moverse a ningún lado
-    if (currentIndex === states.length - 1) {
-      return [];
-    }
-
-    // Retornar solo el ID del siguiente estado
-    const nextState = states[currentIndex + 1];
-    return [`state-${nextState.id}`];
+  getStateName(stateId: number): string {
+    return this.states()?.find((state) => state.id === stateId)?.name || '';
   }
 
-  onDrop(event: CdkDragDrop<any>) {
-    if (event.previousContainer === event.container) {
-      return;
+  getNextValidStates(currentStateId: number): State[] {
+    const currentState = this.states()?.find(
+      (state) => state.id === currentStateId
+    );
+    if (!currentState) return [];
+
+    return (
+      this.states()?.filter(
+        (state) => state.order === currentState.order + 1
+      ) || []
+    );
+  }
+
+  onStateChange(taskId: string, event: Event) {
+    const newStateId = parseInt((event.target as HTMLSelectElement).value, 10);
+    try {
+      this.taskService.updateTaskState(taskId, newStateId);
+      this.alertService.showAlert('Estado de tarea actualizado correctamente');
+    } catch (error: any) {
+      this.alertService.showAlert(error.message, 'error');
     }
-
-    const task = event.previousContainer.data[event.previousIndex];
-    const newStateId = parseInt(event.container.id.split('-')[1]);
-
-    this.taskService.updateTaskState(task.id, newStateId);
   }
 
   onDelete(taskId: string) {
@@ -59,21 +52,21 @@ export class TaskBoardComponent {
     this.alertService.showAlert('Tarea eliminada, puedes verla en la papelera');
   }
 
-  showAddTaskDialog = signal(false);
   stateOfAddTask = signal<number>(1);
+  showAddTaskDialog = signal(false);
 
   onAddTask(stateId: number) {
     this.stateOfAddTask.set(stateId);
     this.showAddTaskDialog.set(true);
   }
 
+  closeAddTaskDialog = () => {
+    this.showAddTaskDialog.set(false);
+  };
+
   saveAddTask = (title: string, stateId: number) => {
     this.taskService.addTask(title, stateId);
     this.closeAddTaskDialog();
-  };
-
-  closeAddTaskDialog = () => {
-    this.showAddTaskDialog.set(false);
   };
 
   showEditTaskDialog = signal(false);

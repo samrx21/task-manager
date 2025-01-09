@@ -3,26 +3,36 @@
     <h2>Agregar Tarea</h2>
     <form [formGroup]="addTaskForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="title">Título</label>
-        <input
-          type="text"
-          id="title"
-          formControlName="title"
-          class="form-control"
-        />
-        @if (addTaskForm.get('title')?.errors?.['required'] &&
-        addTaskForm.get('title')?.touched) {
-        <span class="error">El título es requerido </span>
-        } @if (addTaskForm.get('title')?.errors?.['maxlength']) {
-        <span class="error">El título no puede exceder 250 caracteres</span>
-        } 
+        <div class="title-container">
+          <label for="title">Título</label>
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
+            class="form-control-title"
+          />
+          @if ((addTaskForm.get('title')?.errors?.['required'] &&
+          addTaskForm.get('title')?.touched) || formInvalid()) {
+          <span class="error">El título es requerido </span>
+          } @if (addTaskForm.get('title')?.errors?.['maxlength']) {
+          <span class="error">El título no puede exceder 250 caracteres</span>
+          } 
+        </div>
+        <div >
+          <label for="state">Estado</label>
+          <select [value]="initialStateId" id="state" formControlName="stateId" class="form-control">
+            @for (state of states(); track state.id) {
+              <option [value]="state.id">{{ state.name }}</option>
+            }
+          </select>
+          
+        </div>
       </div>
-
       <div class="button-group">
         <button type="button" class="btn-cancel" (click)="onCancel()">
           Cancelar
         </button>
-        <button type="submit" class="btn-save" [disabled]="!addTaskForm.valid">
+        <button type="submit" class="btn-save" >
           Guardar
         </button>
       </div>

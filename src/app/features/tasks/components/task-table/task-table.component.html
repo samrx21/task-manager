@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th class="title-column">Título</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (task of tasks(); track task.id) {
+        <tr>
+          <td class="title-column" >{{ task.title }}</td>
+          <td>
+            <select
+              [(ngModel)]="task.stateId"
+              (change)="onStateChange(task.id, $event)"
+            >
+              <option [ngValue]="task.stateId">
+                {{ getStateName(task.stateId) }}
+              </option>
+              @for (state of getNextValidStates(task.stateId); track state.id) {
+              <option [ngValue]="state.id">{{ state.name }}</option>
+              }
+            </select>
+          </td>
+          <td>
+            <button class="btn-icon" (click)="onEdit(task)">✏️</button>
+            <button class="btn-icon" (click)="onDelete(task.id)">🗑️</button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <button class="btn-add" (click)="onAddTask(1)">Agregar tarea</button>
+  @if(showAddTaskDialog()) {
+  <app-task-add-dialog
+    [initialStateId]="stateOfAddTask()"
+    [onSave]="saveAddTask"
+    [onClose]="closeAddTaskDialog"
+  />
+  } @if(showEditTaskDialog()){
+  <app-task-edit-dialog
+    [task]="taskToEdit()!"
+    [onSave]="saveEditTask"
+    [onClose]="closeEditTaskDialog"
+  />
+  }
+</div>

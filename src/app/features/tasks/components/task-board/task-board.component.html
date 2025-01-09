@@ -56,7 +56,7 @@
   </div>
   @if(showAddTaskDialog()){
   <app-task-add-dialog
-    [stateId]="stateOfAddTask()"
+    [initialStateId]="stateOfAddTask()"
     [onSave]="saveAddTask"
     [onClose]="closeAddTaskDialog"
   />
